@@ -11,20 +11,21 @@ on:
   pull_request:
 jobs:
   # Lint
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          persist-credentials: false
-      - name: Lint Dockerfiles
-        run: |
-          make docker-lint
+  # lint:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         persist-credentials: false
+  #     - name: Lint Dockerfiles
+  #       run: |
+  #         make docker-lint
   # Build Docker Images
   docker:
     env:
       DOCKER_CLI_EXPERIMENTAL: enabled
-    needs: lint
+      DOCKER_BUILDKIT: 1
+    # needs: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -34,8 +35,8 @@ jobs:
         run: |
           curl -sSfL https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64 -o buildx
           mkdir -p ${HOME}/.docker/cli-plugins
-          cp buildx ${HOME}/.docker/cli-plugins/buildx
-          chmod a+x ${HOME}/.docker/cli-plugins/buildx
+          cp buildx ${HOME}/.docker/cli-plugins/docker-buildx
+          chmod a+x ${HOME}/.docker/cli-plugins/docker-buildx
       - name: Install
         run: |
           sudo apt-get -qq update
