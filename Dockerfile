@@ -1,4 +1,4 @@
-FROM python:3.8.1-alpine as base
+FROM python:3.8.2-alpine as base
 
 ARG GITHUB_SHA
 ARG GITHUB_WORKFLOW
