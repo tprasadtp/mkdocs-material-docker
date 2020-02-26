@@ -38,19 +38,19 @@ jobs:
         env:
           DOCKER_USERNAME: tprasadtp
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-        if: github.head_ref	!= '' && github.event_name == 'push'
+        if: github.event_name == 'push'
 
       - name: Docker Login to Registry (GitHub)
         run: echo "$DOCKER_PASSWORD" | docker login docker.pkg.github.com -u "$DOCKER_USERNAME" --password-stdin
         env:
           DOCKER_USERNAME: tprasadtp
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-        if: github.head_ref	!= '' && github.event_name == 'push'
+        if: github.event_name == 'push'
 
       - name: Docker Push
         run: make docker-push
-        if: github.head_ref	!= '' && github.event_name == 'push'
+        if: github.event_name == 'push'
 
       - name: Docker Cleanup
         run: docker logout && rm -f ${HOME}/.docker/config.json
-        if: github.head_ref	!= '' && github.event_name == 'push'
+        if: github.event_name == 'push'
