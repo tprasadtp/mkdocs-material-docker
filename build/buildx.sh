@@ -4,15 +4,16 @@ function cross_build()
 {
   local TAG_PREFIX="${1}"
   local TAG="${2}"
-  local PUSH_FLAG="${3:-true}"
+  local DOCKER_TARGET="${3}"
+  local PUSH_FLAG="${4:-true}"
 
   echo "IMAGE PREFIX: $TAG_PREFIX"
   echo "IMAGE TAG   : $TAG"
   echo "BRANCH      : $BRANCH"
   echo "PUSH_FLAG   : $PUSH_FLAG"
 
-  if [[ -z ${TAG_PREFIX} ]] || [[ -z ${TAG} ]] || [[ -z ${BRANCH} ]] || [[ -z $PUSH_FLAG ]]  ; then
-    echo "Error! Either TAG, TAG_PREFIX or BRANCH is empty"
+  if [[ -z ${TAG_PREFIX} ]] || [[ -z ${TAG} ]] || [[ -z ${BRANCH} ]] || [[ -z $PUSH_FLAG ]] || [[ -z $DOCKER_TARGET ]]  ; then
+    echo "Error! Either TAG, TAG_PREFIX, DOCKER_TARGET or BRANCH is empty"
     exit 2
   fi
 
@@ -21,7 +22,7 @@ function cross_build()
     DOCKER_BUILDKIT="${DOCKER_BUILDKIT}" docker buildx build \
         --platform linux/amd64,linux/arm64,linux/arm/v7 \
         --push \
-        --target base \
+        --target "${DOCKER_TARGET}" \
         -t "${TAG_PREFIX}:${TAG}" \
         --build-arg GITHUB_ACTOR="${GITHUB_ACTOR}"\
         --build-arg GITHUB_SHA="${GITHUB_SHA}" \
@@ -34,7 +35,7 @@ function cross_build()
     echo "BUILDX :: Push is Disabled!"
     DOCKER_BUILDKIT="${DOCKER_BUILDKIT}" docker buildx build \
         --platform linux/amd64,linux/arm64,linux/arm/v7 \
-        --target base \
+        --target "${DOCKER_TARGET}" \
         -t "${TAG_PREFIX}:${TAG}" \
         --build-arg GITHUB_ACTOR="${GITHUB_ACTOR}"\
         --build-arg GITHUB_SHA="${GITHUB_SHA}" \
@@ -64,24 +65,24 @@ function main()
 
   if [[ ${BRANCH} == "master" ]]; then
     echo "Build LATEST"
-    cross_build "${DOCKER_USER}/${NAME}" "latest" "$enable_push"
-    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "latest" "$enable_push"
+    cross_build "${DOCKER_USER}/${NAME}" "latest" "base" "$enable_push"
+    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "latest" "base" "$enable_push"
     echo "Build LATEST-USER"
-    cross_build "${DOCKER_USER}/${NAME}" "latest-user" "$enable_push"
-    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "latest-user" "$enable_push"
+    cross_build "${DOCKER_USER}/${NAME}" "latest-user" "user" "$enable_push"
+    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "latest-user" "user" "$enable_push"
     echo "Build VERSION"
-    cross_build "${DOCKER_USER}/${NAME}" "${VERSION}" "$enable_push"
-    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${VERSION}" "$enable_push"
+    cross_build "${DOCKER_USER}/${NAME}" "${VERSION}" "base" "$enable_push"
+    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${VERSION}" "base" "$enable_push"
     echo "Build VERSION_USER"
-    cross_build "${DOCKER_USER}/${NAME}" "${VERSION}-user" "$enable_push"
-    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${VERSION}-user" "$enable_push"
+    cross_build "${DOCKER_USER}/${NAME}" "${VERSION}-user" "user" "$enable_push"
+    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${VERSION}-user" "user" "$enable_push"
   else
     echo "Build $BRANCH"
-    cross_build "${DOCKER_USER}/${NAME}" "${BRANCH}" "$enable_push"
-    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${BRANCH}" "$enable_push"
+    cross_build "${DOCKER_USER}/${NAME}" "${BRANCH}" "base" "$enable_push"
+    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${BRANCH}" "base" "$enable_push"
     echo "Build VERSION_USER"
-    cross_build "${DOCKER_USER}/${NAME}" "${BRANCH}-user" "$enable_push"
-    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${BRANCH}-user" "$enable_push"
+    cross_build "${DOCKER_USER}/${NAME}" "${BRANCH}-user" "user" "$enable_push"
+    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${BRANCH}-user" "user" "$enable_push"
   fi
 
 }
