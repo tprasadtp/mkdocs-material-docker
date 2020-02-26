@@ -1,0 +1,44 @@
+name: build
+on:
+  push:
+    paths-ignore:
+      - ".gitignore"
+      - ".envrc"
+      - "**.md"
+      - ".vscode/**"
+      - ".dependabot/**"
+      - "_config.yml"
+  pull_request:
+jobs:
+  # Build docker images
+  docker:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Lint Dockerfiles
+        run: |
+          make docker-lint
+
+      - name: Build Docker
+        run: |
+          make debug-vars
+          make docker-all
+
+      - name: Docker Login to Registry (DockerHub)
+        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        env:
+          DOCKER_USERNAME: tprasadtp
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Docker Login to Registry (GitHub)
+        run: echo "$DOCKER_PASSWORD" | docker login docker.pkg.github.com -u "$DOCKER_USERNAME" --password-stdin
+        env:
+          DOCKER_USERNAME: tprasadtp
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker Push
+        run: make docker-push
+
+      - name: Docker Cleanup
+        run: docker logout && rm -f ${HOME}/.docker/config.json
