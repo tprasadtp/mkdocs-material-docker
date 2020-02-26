@@ -41,7 +41,8 @@ docker-lint: ## Lint Dockerfiles
 docker: ## Build DockerHub image (runs as root inide docker)
 	@echo -e "\033[92m➜ $@ \033[0m"
 	@echo -e "\033[92m✱ Building Docker Image\033[0m"
-	@DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build -t $(NAME) \
+	@DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 \
+		-t $(NAME) \
 		--build-arg GITHUB_ACTOR=$(GITHUB_ACTOR)\
 		--build-arg GITHUB_SHA=$(GITHUB_SHA) \
 		--build-arg GITHUB_WORKFLOW=$(GITHUB_WORKFLOW) \
