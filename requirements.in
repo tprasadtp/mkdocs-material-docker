@@ -6,4 +6,3 @@ pymdown-extensions>=4.10.1
 mkdocs-redirects
 mkdocs-minify-plugin
 mkdocs-git-revision-date-localized-plugin
-mknotebooks
