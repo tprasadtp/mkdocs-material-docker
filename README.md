@@ -14,10 +14,12 @@ Images are published both on
 
 - Most of the work is done by bots and CI.
 - Images are kept up to date by dependabot.
-- This image adds following pip additional packages to the docker image
+- This image adds following additional pip packages to the docker image
   ```text
-  Pygments>=2.2.0
-  pymdown-extensions>=4.10.1
+  mkdocs-redirects
+  mkdocs-minify-plugin
+  mkdocs-git-revision-date-localized-plugin
   ```
-- Also, docker image runs as a user with uid 1000 which might help with user namespaces.
+- Also, provide a docker image whihc runs as a user with uid 1000
+- ARM64 and ARM7 images
 - This image **DOES NOT** use upstream docker image as its base.
