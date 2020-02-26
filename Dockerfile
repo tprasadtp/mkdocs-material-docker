@@ -1,5 +1,20 @@
-FROM python:3.7-alpine
-LABEL maintainer="Prasad Tengse <tprasadtp@users.noreply.github.com>"
+FROM python:3.8.1-alpine
+
+ARG GITHUB_SHA
+ARG GITHUB_WORKFLOW
+ARG GITHUB_RUN_NUMBER
+ARG VERSION
+ARG ACTOR
+
+LABEL org.opencontainers.image.authors="Prasad Tengse<tprasadtp@users.noreply.github.com>" \
+      org.opencontainers.image.source="https://github.com/tprasadtp/sync-fork" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.licenses="MIT" \
+      com.github.actions.actor="${GITHUB_ACTOR}" \
+      com.github.actions.run="${GITHUB_RUN_NUMBER}" \
+      com.github.actions.workflow="${GITHUB_WORKFLOW}" \
+      com.github.commit.sha="${GITHUB_SHA}"
+
 RUN addgroup -g 1000 user \
     && adduser -G user -u 1000 -D -h /home/user -s /usr/bin/bash user \
     && mkdir -p /home/user/app \

@@ -1,0 +1,17 @@
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/labels.yml"
+      - ".github/labels.toml"
+name: labels
+jobs:
+  labels:
+    name: Sync Labels
+    runs-on: ubuntu-latest
+    steps:
+    - name: sync labels
+      uses: tprasadtp/labels@master
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}

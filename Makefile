@@ -1,22 +1,21 @@
 # Set the shell
 SHELL := /bin/bash
+REPO := mkdocs-material-docker
 NAME := mkdocs-material
 
 # Base of operations
 ROOT_DIR := $(strip $(patsubst %/, %, $(dir $(realpath $(firstword $(MAKEFILE_LIST))))))
+VERSION := $(shell grep "^mkdocs-material" $(ROOT_DIR)/requirements.txt | cut -f3 -d '=' | cut -f1 -d ' ')
 
 # Default Goal
 .DEFAULT_GOAL := help
 
-# Embrace Extend and .. ooff Sorry, We dont do that anymore! We Love OpenSource. Said MikroSofty
 ifeq ($(GITHUB_ACTIONS),true)
 	BRANCH := $(shell echo "$$GITHUB_REF" | cut -d '/' -f 3- | sed -r 's/[\/\*\#]+/-/g' )
 else
 	BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 	GITHUB_SHA := $(shell git rev-parse HEAD)
-	GITHUB_WORKFLOW := local
-	GITHUB_RUN_NUMBER := "0"
-	VERSION := $(shell cat requirements.txt | grep "^mkdocs-material" | cut -f3 -d '=' | cut -f1 -d ' ')
+	GITHUB_ACTOR := "tprasadtp"
 endif
 
 # Version
@@ -27,7 +26,7 @@ DOCKER_BUILDKIT ?= 1
 DOCKER_USER := tprasadtp
 
 # Prefix for github package registry images
-DOCKER_PREFIX_GITHUB := docker.pkg.github.com/$(DOCKER_USER)/$(NAME)
+DOCKER_PREFIX_GITHUB := docker.pkg.github.com/$(DOCKER_USER)/$(REPO)
 
 .PHONY: lint
 lint: docker-lint ## Lint Everything
@@ -36,24 +35,23 @@ lint: docker-lint ## Lint Everything
 .PHONY: docker-lint
 docker-lint: ## Lint Dockerfiles
 	@echo -e "\033[92m➜ $@ \033[0m"
-	docker run --rm -i hadolint/hadolint < $(ROOT_DIR)/src/Dockerfile
+	docker run --rm -i hadolint/hadolint < $(ROOT_DIR)/Dockerfile
 
 .PHONY: docker
 docker: ## Build DockerHub image (runs as root inide docker)
 	@echo -e "\033[92m➜ $@ \033[0m"
 	@echo -e "\033[92m✱ Building Docker Image\033[0m"
-	@DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build --target action -t $(NAME) \
+	@DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build -t $(NAME) \
 		--build-arg GITHUB_SHA=$(GITHUB_SHA) \
 		--build-arg GITHUB_WORKFLOW=$(GITHUB_WORKFLOW) \
 		--build-arg GITHUB_RUN_NUMBER=$(GITHUB_RUN_NUMBER) \
 		--build-arg VERSION=$(VERSION) \
-		-f $(ROOT_DIR)/src/Dockerfile \
-		$(ROOT_DIR)/src
+		-f $(ROOT_DIR)/Dockerfile \
+		$(ROOT_DIR)/
 	@if [ $(BRANCH) == "master" ]; then \
 		echo -e "\033[92m✱ Tagging as latest \033[0m"; \
 		docker tag $(NAME) $(DOCKER_USER)/$(NAME):latest; \
 		docker tag $(NAME) $(DOCKER_PREFIX_GITHUB)/$(NAME):latest; \
-
 		echo -e "\033[92m✱ Tagging as $(VERSION)\033[0m"; \
 		docker tag $(NAME) $(DOCKER_USER)/$(NAME):$(VERSION); \
 		docker tag $(NAME) $(DOCKER_PREFIX_GITHUB)/$(NAME):$(VERSION); \
@@ -77,9 +75,9 @@ docker-push: ## Push docker images (action and user images)
 		docker push $(DOCKER_PREFIX_GITHUB)/$(NAME):$(VERSION); \
 	else \
 		echo -e "\033[92m✱ Pushing Tag: $(BRANCH)[DockerHub].\033[0m"; \
-		docker push $(DOCKER_USER)/$(NAME):$(BRANCH); \
+		#docker push $(DOCKER_USER)/$(NAME):$(BRANCH); \
 		echo -e "\033[92m✱ Pushing Tag: $(BRANCH)[GitHub] \033[0m"; \
-		docker push $(DOCKER_PREFIX_GITHUB)/$(NAME):$(BRANCH); \
+		#docker push $(DOCKER_PREFIX_GITHUB)/$(NAME):$(BRANCH); \
 	fi
 
 .PHONY: help
@@ -106,4 +104,5 @@ debug-vars:
 	@echo "BRANCH: ${BRANCH}"
 	@echo "GITHUB_SHA: ${GITHUB_SHA}"
 	@echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
-	@echo "GITHUB_RUN_NUMBER: ${GITHUB_RUN_NUMBER}
+	@echo "GITHUB_RUN_NUMBER: ${GITHUB_RUN_NUMBER}"
+	@echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"

@@ -10,35 +10,47 @@ on:
       - "_config.yml"
   pull_request:
 jobs:
-  # Build docker images
-  docker:
-    needs: test
+  # Lint
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       - name: Lint Dockerfiles
         run: |
           make docker-lint
-
+  # Build Docker Images
+  docker:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       - name: Build Docker
         run: |
           make debug-vars
-          make docker-all
+          make docker
 
       - name: Docker Login to Registry (DockerHub)
         run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         env:
           DOCKER_USERNAME: tprasadtp
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        if: github.head_ref	!= '' && github.event_name == 'push'
 
       - name: Docker Login to Registry (GitHub)
         run: echo "$DOCKER_PASSWORD" | docker login docker.pkg.github.com -u "$DOCKER_USERNAME" --password-stdin
         env:
           DOCKER_USERNAME: tprasadtp
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        if: github.head_ref	!= '' && github.event_name == 'push'
 
       - name: Docker Push
         run: make docker-push
+        if: github.head_ref	!= '' && github.event_name == 'push'
 
       - name: Docker Cleanup
         run: docker logout && rm -f ${HOME}/.docker/config.json
+        if: github.head_ref	!= '' && github.event_name == 'push'

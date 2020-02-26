@@ -5,3 +5,5 @@ Docekrfile
 requirements.in
 *.md
 LICENSE
+.editorconfig
+Makefile
