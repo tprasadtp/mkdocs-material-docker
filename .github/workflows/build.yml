@@ -33,19 +33,23 @@ jobs:
       - name: Download BuildX
         run: |
           curl -sSfL https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64 -o buildx
-          mkdir -p ${HOME}/.docker
-          cp buildx ${HOME}/.docker/buildx
-          chmod +x ${HOME}/.docker/buildx
-      - name: Install binfmt
+          mkdir -p ${HOME}/.docker/cli-plugins
+          cp buildx ${HOME}/.docker/cli-plugins/buildx
+          chmod a+x ${HOME}/.docker/cli-plugins/buildx
+      - name: Install
         run: |
+          apt-get install -y -qq qemu-user
           sudo docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
+      - name: Info
+        run: |
           cat /proc/sys/fs/binfmt_misc/qemu-aarch64
+          docker info
+          docker buildx version
       - name: Create Builder
         run: |
           docker buildx create --name actions
           docker buildx use actions
           docker buildx inspect --bootstrap
-          docker buildx version
       - name: Build Docker
         run: |
           make debug-vars
