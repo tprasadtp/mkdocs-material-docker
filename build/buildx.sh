@@ -65,23 +65,23 @@ function main()
   if [[ ${BRANCH} == "master" ]]; then
     echo "Build LATEST"
     cross_build "${DOCKER_USER}/${NAME}" "latest" "$enable_push"
-    cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "latest" "$enable_push"
+    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "latest" "$enable_push"
     echo "Build LATEST-USER"
     cross_build "${DOCKER_USER}/${NAME}" "latest-user" "$enable_push"
-    cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "latest-user" "$enable_push"
+    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "latest-user" "$enable_push"
     echo "Build VERSION"
     cross_build "${DOCKER_USER}/${NAME}" "${VERSION}" "$enable_push"
-    cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${VERSION}" "$enable_push"
+    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${VERSION}" "$enable_push"
     echo "Build VERSION_USER"
     cross_build "${DOCKER_USER}/${NAME}" "${VERSION}-user" "$enable_push"
-    cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${VERSION}-user" "$enable_push"
+    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${VERSION}-user" "$enable_push"
   else
     echo "Build $BRANCH"
     cross_build "${DOCKER_USER}/${NAME}" "${BRANCH}" "$enable_push"
-    cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${BRANCH}" "$enable_push"
+    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${BRANCH}" "$enable_push"
     echo "Build VERSION_USER"
     cross_build "${DOCKER_USER}/${NAME}" "${BRANCH}-user" "$enable_push"
-    cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${BRANCH}-user" "$enable_push"
+    # cross_build "${DOCKER_PREFIX_GITHUB}/${NAME}" "${BRANCH}-user" "$enable_push"
   fi
 
 }
