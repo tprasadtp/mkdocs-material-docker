@@ -25,6 +25,7 @@ endif
 
 # Enable Buidkit if not disabled
 DOCKER_BUILDKIT ?= 1
+BUILDX_ENABLE_PUSH ?= false
 
 DOCKER_USER := tprasadtp
 
@@ -47,7 +48,7 @@ docker-cross: ## Cross Build
 	@if [ $(BUILDX_ENABLE_PUSH) == "true" ]; then \
 		bash $(ROOT_DIR)/build/buildx.sh --push; \
 	else \
-		bash $(ROOT_DIR)/build/buildx.sh --push'; \
+		bash $(ROOT_DIR)/build/buildx.sh; \
 	fi
 
 .PHONY: docker

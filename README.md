@@ -20,5 +20,6 @@ Images are published both on
   mkdocs-minify-plugin
   mkdocs-git-revision-date-localized-plugin
   ```
-- Also, docker image runs as a user with uid 1000 which might help with user namespaces.
+- Also, provide a docker image whihc runs as a user with uid 1000
+- ARM64 and ARM7 images
 - This image **DOES NOT** use upstream docker image as its base.
