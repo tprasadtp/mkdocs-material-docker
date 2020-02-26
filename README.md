@@ -19,7 +19,6 @@ Images are published both on
   mkdocs-redirects
   mkdocs-minify-plugin
   mkdocs-git-revision-date-localized-plugin
-  mknotebooks
   ```
 - Also, docker image runs as a user with uid 1000 which might help with user namespaces.
 - This image **DOES NOT** use upstream docker image as its base.

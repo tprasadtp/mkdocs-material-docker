@@ -38,3 +38,4 @@ LICENSE
 .editorconfig
 Makefile
 .envrc
+build/

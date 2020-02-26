@@ -40,6 +40,16 @@ docker-lint: ## Lint Dockerfiles
 	@echo -e "\033[92m➜ $@ \033[0m"
 	docker run --rm -i hadolint/hadolint < $(ROOT_DIR)/Dockerfile
 
+.PHONY: docker-cross
+docker-cross: ## Cross Build
+	@echo -e "\033[92m➜ $@ \033[0m"
+	@echo -e "\033[92m✱ Building Docker Image [CROSS]\033[0m"
+	@if [ $(BUILDX_ENABLE_PUSH) == "true" ]; then \
+		bash $(ROOT_DIR)/build/buildx.sh --push; \
+	else \
+		bash $(ROOT_DIR)/build/buildx.sh --push'; \
+	fi
+
 .PHONY: docker
 docker: ## Build DockerHub image (runs as root inide docker)
 	@echo -e "\033[92m➜ $@ \033[0m"

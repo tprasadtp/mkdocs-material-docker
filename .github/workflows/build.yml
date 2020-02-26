@@ -11,21 +11,21 @@ on:
   pull_request:
 jobs:
   # Lint
-  # lint:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         persist-credentials: false
-  #     - name: Lint Dockerfiles
-  #       run: |
-  #         make docker-lint
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Lint Dockerfiles
+        run: |
+          make docker-lint
   # Build Docker Images
   docker:
     env:
-      DOCKER_CLI_EXPERIMENTAL: enabled
+      # DOCKER_CLI_EXPERIMENTAL: enabled
       DOCKER_BUILDKIT: 1
-    # needs: lint
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -52,10 +52,6 @@ jobs:
           docker buildx create --name actions
           docker buildx use actions
           docker buildx inspect --bootstrap
-      - name: Build Docker
-        run: |
-          make debug-vars
-          make docker
 
       - name: Docker Login to Registry (DockerHub)
         run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
@@ -71,9 +67,21 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
         if: github.event_name == 'push'
 
-      - name: Docker Push
-        run: make docker-push
+      - name: Build Docker [CROSS_PUSH]
+        run: |
+          make debug-vars
+          make docker-cross
+        env:
+          BUILDX_ENABLE_PUSH: true
         if: github.event_name == 'push'
+
+      - name: Build Docker [CROSS_PUSH]
+        run: |
+          make debug-vars
+          make docker-cross
+        env:
+          BUILDX_ENABLE_PUSH: false
+        if: github.event_name != 'push'
 
       - name: Docker Cleanup
         run: docker logout && rm -f ${HOME}/.docker/config.json
