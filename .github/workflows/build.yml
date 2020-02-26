@@ -75,7 +75,7 @@ jobs:
           BUILDX_ENABLE_PUSH: true
         if: github.event_name == 'push'
 
-      - name: Build Docker [CROSS_PUSH]
+      - name: Build Docker [CROSS_NOPUSH]
         run: |
           make debug-vars
           make docker-cross

@@ -20,7 +20,7 @@ function cross_build()
     echo "BUILDX :: Push is enabled!"
     DOCKER_BUILDKIT="${DOCKER_BUILDKIT}" docker buildx build \
         --platform linux/amd64,linux/arm64,linux/arm/v7 \
-        --push
+        --push \
         --target base \
         -t "${TAG_PREFIX}:${TAG}" \
         --build-arg GITHUB_ACTOR="${GITHUB_ACTOR}"\
