@@ -3,8 +3,8 @@ FROM python:3.8.1-alpine
 ARG GITHUB_SHA
 ARG GITHUB_WORKFLOW
 ARG GITHUB_RUN_NUMBER
+ARG GITHUB_ACTOR
 ARG VERSION
-ARG ACTOR
 
 LABEL org.opencontainers.image.authors="Prasad Tengse<tprasadtp@users.noreply.github.com>" \
       org.opencontainers.image.source="https://github.com/tprasadtp/sync-fork" \

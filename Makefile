@@ -42,6 +42,7 @@ docker: ## Build DockerHub image (runs as root inide docker)
 	@echo -e "\033[92m➜ $@ \033[0m"
 	@echo -e "\033[92m✱ Building Docker Image\033[0m"
 	@DOCKER_BUILDKIT=$(DOCKER_BUILDKIT) docker build -t $(NAME) \
+		--build-arg GITHUB_ACTOR=$(GITHUB_ACTOR)\
 		--build-arg GITHUB_SHA=$(GITHUB_SHA) \
 		--build-arg GITHUB_WORKFLOW=$(GITHUB_WORKFLOW) \
 		--build-arg GITHUB_RUN_NUMBER=$(GITHUB_RUN_NUMBER) \
