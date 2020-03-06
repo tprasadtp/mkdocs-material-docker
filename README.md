@@ -1,13 +1,13 @@
 # mkdocs-material docker image
 
 [![actions](https://github.com/tprasadtp/mkdocs-material-docker/workflows/build/badge.svg)](https://github.com/tprasadtp/mkdocs-material-docker/actions?workflow=build)
+[![actions](https://github.com/tprasadtp/mkdocs-material-docker/workflows/labels/badge.svg)](https://github.com/tprasadtp/mkdocs-material-docker/actions?workflow=labels)
+[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/tprasadtp/mkdocs-material?logo=docker&label=latest&logoColor=white)](https://hub.docker.com/r/tprasadtp/mkdocs-material)
 [![dependabot](https://api.dependabot.com/badges/status?host=github&repo=tprasadtp/mkdocs-material-docker)](https://app.dependabot.com)
-[![](https://images.microbadger.com/badges/version/tprasadtp/mkdocs-material.svg)](https://hub.docker.com/repository/docker/tprasadtp/mkdocs-material)
 ![Analytics](https://ga-beacon.prasadt.com/UA-101760811-3/github/mkdocs-material-docker?pink&useReferer)
 
 Images are published both on
-  - [DockerHub](https://hub.docker.com/repository/docker/tprasadtp/mkdocs-material) and
-  - GitHub Package registry
+  - [DockerHub](https://hub.docker.com/r/tprasadtp/mkdocs-material/tags) and ~~GitHub Package registry~~ [Waiting for  multi arch image support](https://github.community/t5/GitHub-API-Development-and/Handle-multi-arch-Docker-images-on-GitHub-Package-Registry/td-p/31650).
   - Version tag will always reflect version of `mkdocs-material` being used.
 
 ## Notes
@@ -20,6 +20,5 @@ Images are published both on
   mkdocs-minify-plugin
   mkdocs-git-revision-date-localized-plugin
   ```
-- Also, provide a docker image whihc runs as a user with uid 1000
 - ARM64 and ARM7 images
 - This image **DOES NOT** use upstream docker image as its base.

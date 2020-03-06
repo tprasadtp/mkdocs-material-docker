@@ -3,12 +3,13 @@ on:
     branches:
       - master
     paths:
-      - ".github/workflows/labels.yml"
+      # Labels Only
       - ".github/labels.toml"
+      - ".github/workflows/labels.yml"
 name: labels
 jobs:
   labels:
-    name: Sync Labels
+    name: labels
     runs-on: ubuntu-latest
     steps:
     - name: sync labels

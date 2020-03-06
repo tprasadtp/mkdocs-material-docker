@@ -8,81 +8,87 @@ on:
       - ".vscode/**"
       - ".dependabot/**"
       - "_config.yml"
+      # Labels
+      - ".github/labels.toml"
+      - ".github/workflows/labels.yml"
   pull_request:
 jobs:
-  # Lint
+  # lint everything
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          persist-credentials: false
-      - name: Lint Dockerfiles
-        run: |
-          make docker-lint
-  # Build Docker Images
+      - name: Lint
+        run: make docker-lint
+  # Build docker images
   docker:
-    env:
-      # DOCKER_CLI_EXPERIMENTAL: enabled
-      DOCKER_BUILDKIT: 1
     needs: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
+
       - name: Download BuildX
         run: |
           curl -sSfL https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64 -o buildx
           mkdir -p ${HOME}/.docker/cli-plugins
           cp buildx ${HOME}/.docker/cli-plugins/docker-buildx
           chmod a+x ${HOME}/.docker/cli-plugins/docker-buildx
+
       - name: Install
         run: |
           sudo apt-get -qq update
           sudo apt-get install -y -qq qemu-user
           sudo docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
+
       - name: Info
         run: |
           cat /proc/sys/fs/binfmt_misc/qemu-aarch64
           docker info
           docker buildx version
+
       - name: Create Builder
         run: |
           docker buildx create --name actions
           docker buildx use actions
           docker buildx inspect --bootstrap
 
-      - name: Docker Login to Registry (DockerHub)
-        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        env:
-          DOCKER_USERNAME: tprasadtp
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        if: github.event_name == 'push'
-
       # - name: Docker Login to Registry (GitHub)
       #   run: echo "$DOCKER_PASSWORD" | docker login docker.pkg.github.com -u "$DOCKER_USERNAME" --password-stdin
       #   env:
       #     DOCKER_USERNAME: tprasadtp
       #     DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-      #   if: github.event_name == 'push'
+      #   if: github.event_name	== 'push' || ( github.event_name == 'pull' &&  github.actor	== 'tprasadtp' )
 
-      - name: Build Docker [CROSS_PUSH]
-        run: |
-          make debug-vars
-          make docker-cross
+      - name: Docker Login to Registry (DockerHub)
+        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         env:
-          BUILDX_ENABLE_PUSH: true
+          DOCKER_USERNAME: tprasadtp
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        if: github.event_name	== 'push'
+
+      - name: Docker Build [With Push]
+        run: |
+            make debug-docker-vars
+            make docker
+        env:
+          BUILDX_PUSH: 1
+          BUILDX_ENABLE: 1
         if: github.event_name == 'push'
 
-      - name: Build Docker [CROSS_NOPUSH]
+      # No Push
+      - name: Docker Build [Skip Push]
         run: |
-          make debug-vars
-          make docker-cross
+            make debug-docker-vars
+            make docker
         env:
-          BUILDX_ENABLE_PUSH: false
-        if: github.event_name != 'push'
+          BUILDX_PUSH: 0
+          BUILDX_ENABLE: 1
+        if: github.event_name == 'pull_request'
 
       - name: Docker Cleanup
-        run: docker logout && rm -f ${HOME}/.docker/config.json
-        if: github.event_name == 'push'
+        run: |
+          docker logout || true
+          rm -f ${HOME}/.docker/config.json
+        if: github.event_name	== 'push'
