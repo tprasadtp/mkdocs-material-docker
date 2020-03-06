@@ -14,8 +14,7 @@ IMAGE_DOCUMENTATION     := https://github.com/tprasadtp/mkdocs-material
 
 # Relative to
 DOCKER_CONTEXT_DIR := $(WATCHTOWER_BASE)
-DOCKER_SQUASH      := 1
-
+DOCKER_TARGET      := release
 # Version
 VERSION          := $(shell grep "^mkdocs-material" $(WATCHTOWER_BASE)/requirements.txt | cut -f3 -d '=' | cut -f1 -d ' ')
 UPSTREAM_PRESENT := true
