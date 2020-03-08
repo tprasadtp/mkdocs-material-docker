@@ -1,3 +1,4 @@
+WATCHTOWER_BASE := $(strip $(patsubst %/, %, $(dir $(realpath $(firstword $(MAKEFILE_LIST))))))
 # Set Help, default goal and WATCHTOWER_BASE
 include help.mk
 
