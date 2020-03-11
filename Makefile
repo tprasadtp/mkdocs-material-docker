@@ -1,6 +1,6 @@
 WATCHTOWER_BASE := $(strip $(patsubst %/, %, $(dir $(realpath $(firstword $(MAKEFILE_LIST))))))
 # Set Help, default goal and WATCHTOWER_BASE
-include help.mk
+include makefiles/help.mk
 
 # Name of the project and docker image
 NAME  := mkdocs-material
@@ -22,7 +22,7 @@ UPSTREAM_PRESENT := true
 UPSTREAM_AUTHOR  := Martin Donath
 UPSTREAM_URL     := https://github.com/squidfunk/mkdocs-material
 
-include docker.mk
+include makefiles/docker.mk
 
 .EXPORT_ALL_VARIABLES:
 
