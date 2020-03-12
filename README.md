@@ -10,6 +10,8 @@ Images are published both on
   - [DockerHub](https://hub.docker.com/r/tprasadtp/mkdocs-material/tags) and ~~GitHub Package registry~~ [Waiting for  multi arch image support](https://github.community/t5/GitHub-API-Development-and/Handle-multi-arch-Docker-images-on-GitHub-Package-Registry/td-p/31650).
   - Version tag will always reflect version of `mkdocs-material` being used.
 
+> It is recommended not to use `latest` tag as it may or may not track latest stable release.
+
 ## Notes
 
 - Most of the work is done by bots and CI.
