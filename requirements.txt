@@ -13,14 +13,14 @@ htmlmin==0.1.12           # via mkdocs-minify-plugin
 jinja2==2.11.1            # via mkdocs, mkdocs-git-revision-date-localized-plugin
 jsmin==2.2.2              # via mkdocs-minify-plugin
 livereload==2.6.1         # via mkdocs
-lunr[languages]==0.5.6    # via mkdocs
+lunr[languages]==0.5.8    # via mkdocs
 markdown==3.2.1           # via mkdocs, mkdocs-material, pymdown-extensions
 markupsafe==1.1.1         # via jinja2
 mkdocs-git-revision-date-localized-plugin==0.4.8  # via -r requirements.in
 mkdocs-material==4.6.3    # via -r requirements.in
 mkdocs-minify-plugin==0.2.3  # via -r requirements.in
 mkdocs-redirects==1.0.0   # via -r requirements.in
-mkdocs==1.1               # via -r requirements.in, mkdocs-git-revision-date-localized-plugin, mkdocs-material, mkdocs-minify-plugin, mkdocs-redirects
+mkdocs==1.1.1             # via -r requirements.in, mkdocs-git-revision-date-localized-plugin, mkdocs-material, mkdocs-minify-plugin, mkdocs-redirects
 nltk==3.4.5               # via lunr
 pygments==2.6.1           # via -r requirements.in, mkdocs-material
 pymdown-extensions==6.3   # via -r requirements.in, mkdocs-material
