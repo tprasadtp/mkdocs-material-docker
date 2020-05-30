@@ -3,7 +3,7 @@ WATCHTOWER_BASE := $(strip $(patsubst %/, %, $(dir $(realpath $(firstword $(MAKE
 include makefiles/help.mk
 
 # Name of the project and docker image
-NAME  := mkdocs-material
+IMAGE_NAME  := mkdocs-material
 
 # OCI Metadata
 IMAGE_TITLE             := Mkdocs Material
@@ -17,8 +17,7 @@ IMAGE_DOCUMENTATION     := https://github.com/tprasadtp/mkdocs-material
 DOCKER_CONTEXT_DIR := $(WATCHTOWER_BASE)
 DOCKER_TARGET      := release
 # Version
-VERSION          := $(shell grep "^mkdocs-material" $(WATCHTOWER_BASE)/requirements.txt | cut -f3 -d '=' | cut -f1 -d ' ')
-UPSTREAM_PRESENT := true
+VERSION          := $(shell grep -E "^mkdocs-material==(.*)\# via -r requirements.in" requirements.txt | cut -f3 -d '=' | cut -f1 -d ' ')
 UPSTREAM_AUTHOR  := Martin Donath
 UPSTREAM_URL     := https://github.com/squidfunk/mkdocs-material
 

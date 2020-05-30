@@ -6,7 +6,8 @@ WORKDIR /docs
 
 COPY requirements.txt requirements.txt
 
-RUN pip install \
+RUN apk add --no-cache gcc musl-dev && \
+    pip install \
       --upgrade \
       --progress-bar=off -U \
       --no-cache-dir \
@@ -23,9 +24,6 @@ COPY --from=builder /install /usr/local
 
 # Expose MkDocs development server port
 EXPOSE 8000
-
-ARG VERSION
-ENV VERSION="${VERSION}"
 
 # Start development server by default
 ENTRYPOINT ["mkdocs"]
