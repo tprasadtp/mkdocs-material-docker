@@ -17,7 +17,7 @@ livereload==2.6.1         # via mkdocs
 lunr[languages]==0.5.8    # via mkdocs
 markdown==3.2.2           # via mkdocs, mkdocs-material, pymdown-extensions
 markupsafe==1.1.1         # via jinja2
-mkdocs-awesome-pages-plugin==2.2.1  # via -r requirements.in
+mkdocs-awesome-pages-plugin==2.3.0  # via -r requirements.in
 mkdocs-git-revision-date-localized-plugin==0.7.2  # via -r requirements.in
 mkdocs-material-extensions==1.0  # via mkdocs-material
 mkdocs-material==5.5.14   # via -r requirements.in, mkdocs-material-extensions
