@@ -25,7 +25,7 @@ mkdocs-minify-plugin==0.3.0  # via -r requirements.in
 mkdocs-redirects==1.0.1   # via -r requirements.in
 mkdocs==1.1.2             # via -r requirements.in, mkdocs-awesome-pages-plugin, mkdocs-git-revision-date-localized-plugin, mkdocs-material, mkdocs-minify-plugin, mkdocs-redirects
 nltk==3.5                 # via lunr
-pygments==2.7.1           # via -r requirements.in, mkdocs-material
+pygments==2.7.2           # via -r requirements.in, mkdocs-material
 pymdown-extensions==8.0.1  # via -r requirements.in, mkdocs-material
 pytz==2020.1              # via babel
 pyyaml==5.3.1             # via mkdocs
